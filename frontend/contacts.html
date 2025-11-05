@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact Manager</title>
+  <style>
+    /* ======= 原样式完全保留，仅新增少量 ======= */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', 'Helvetica Neue', sans-serif;
+    }
+    html, body {
+      height: 100%;
+      overflow: hidden;
+    }
+    .auth-page {
+      position: relative;
+      width: 100%;
+      height: 100vh;
+      background: url("/frontend/xingkong.jpg") center/cover no-repeat;
+    }
+    .glass {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: rgba(255, 255, 255, .15);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, .2);
+      padding: 40px;
+      border-radius: 16px;
+      width: 100%;
+      max-width: 400px;
+      min-width: 280px;
+      box-shadow: 0 8px 32px rgba(0, 0, 0, .3);
+      color: #fff;
+    }
+    .glass h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 24px;
+    }
+    .glass input {
+      width: 100%;
+      padding: 12px 15px;
+      margin: 8px 0 16px;
+      border: none;
+      border-radius: 8px;
+      background: rgba(255, 255, 255, .2);
+      color: #fff;
+      font-size: 14px;
+    }
+    .glass input::placeholder {
+      color: #ddd;
+    }
+    .glass button {
+      width: 100%;
+      padding: 12px;
+      background: rgba(255, 255, 255, .25);
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      font-size: 16px;
+      cursor: pointer;
+      transition: background .3s;
+    }
+    .glass button:hover {
+      background: rgba(255, 255, 255, .4);
+    }
+    .glass .link {
+      text-align: center;
+      margin-top: 10px;
+      font-size: 14px;
+    }
+    .glass .link a {
+      color: #fff;
+      text-decoration: underline;
+    }
+    #contactsSection {
+      display: none;
+      height: 100vh;
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4e7f1 100%);
+      flex-direction: column;
+    }
+    .topbar {
+      background: rgba(255, 255, 255, 0.7);
+      backdrop-filter: blur(10px);
+      padding: 15px 30px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, .05);
+    }
+    .topbar h2 {
+      font-weight: 600;
+      color: #333;
+    }
+    .content {
+      flex: 1;
+      padding: 30px;
+      overflow-y: auto;
+    }
+    .search-container {
+      margin-bottom: 20px;
+      display: flex;
+      gap: 10px;
+    }
+    .search-input {
+      flex: 1;
+      padding: 12px 16px;
+      border: 1px solid rgba(0, 0, 0, .08);
+      border-radius: 10px;
+      background: rgba(255, 255, 255, .8);
+      font-size: 14px;
+      transition: border .3s;
+    }
+    .search-input:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+    .contact-form {
+      background: rgba(255, 255, 255, 0.6);
+      backdrop-filter: blur(10px);
+      border-radius: 16px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, .05);
+      padding: 20px;
+      margin-bottom: 25px;
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+    .contact-form input {
+      flex: 1;
+      min-width: 200px;
+      padding: 12px 16px;
+      border: 1px solid rgba(0, 0, 0, .08);
+      border-radius: 10px;
+      background: rgba(255, 255, 255, .8);
+      font-size: 14px;
+      transition: border .3s;
+    }
+    .contact-form input:focus {
+      outline: none;
+      border-color: #667eea;
+    }
+    .main-btn {
+      border-radius: 10px;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #fff;
+      border: none;
+      padding: 10px 22px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all .3s ease;
+      box-shadow: 0 2px 8px rgba(102, 126, 234, .3);
+    }
+    .main-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(102, 126, 234, .4);
+    }
+    #totalCount {
+      font-weight: 600;
+      color: #333;
+    }
+    #contactList {
+      list-style: none;
+      padding: 0;
+      margin-top: 10px;
+    }
+    #contactList li {
+      background: rgba(255, 255, 255, 0.6);
+      backdrop-filter: blur(10px);
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, .05);
+      padding: 16px 20px;
+      margin-bottom: 12px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: transform .2s;
+    }
+    #contactList li:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba(0, 0, 0, .08);
+    }
+    .contact-info {
+      display: flex;
+      align-items: center;
+      gap: 15px;
+      max-width: 80%;
+    }
+    .avatar {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+      color: #fff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 600;
+      font-size: 18px;
+    }
+    .delete-btn {
+      background: #ff6b6b;
+      color: #fff;
+      border: none;
+      padding: 6px 14px;
+      border-radius: 8px;
+      font-size: 13px;
+      cursor: pointer;
+      transition: all .3s ease;
+    }
+    .delete-btn:hover {
+      background: #ff5252;
+      transform: translateY(-1px);
+    }
+    .logout-btn {
+      background: rgba(255, 255, 255, .8);
+      color: #e74c3c;
+      border: 1px solid rgba(231, 76, 60, .2);
+      padding: 8px 18px;
+      border-radius: 10px;
+      font-size: 14px;
+      cursor: pointer;
+      transition: all .3s ease;
+    }
+    .logout-btn:hover {
+      background: #e74c3c;
+      color: #fff;
+      border-color: transparent;
+    }
+    /* ======= 新增：编辑状态 ======= */
+    .edit-row input {
+      padding: 6px 10px;
+      margin: 0 4px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      width: 120px;
+    }
+    .edit-row button {
+      margin-left: 6px;
+      padding: 6px 12px;
+      font-size: 13px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+    }
+    .save-btn {
+      background: #28a745;
+      color: #fff;
+    }
+    .cancel-btn {
+      background: #6c757d;
+      color: #fff;
+    }
+    .section {
+      display: none;
+    }
+    .active {
+      display: block;
+    }
+  </style>
+</head>
+<body>
+  <!-- 登录 -->
+  <div id="loginSection" class="section active auth-page">
+    <div class="glass">
+      <h2>Login</h2>
+      <div style="display:flex;align-items:center;margin:-8px auto 22px;width:80%;">
+        <span style="flex:1;height:1px;background:rgba(255,255,255,.3);"></span>
+        <span style="padding:0 10px;font-size:16px;opacity:.7;">Contact Manager System</span>
+        <span style="flex:1;height:1px;background:rgba(255,255,255,.3);"></span>
+      </div>
+      <form id="loginForm">
+        <input type="text" id="loginUsername" placeholder="Username" required>
+        <input type="password" id="loginPassword" placeholder="Password" required>
+        <button type="submit">Login</button>
+      </form>
+      <div class="link">
+        No account? <a href="#" onclick="showSection('registerSection')">Register</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 注册 -->
+  <div id="registerSection" class="section auth-page">
+    <div class="glass">
+      <h2>Register</h2>
+      <div style="display:flex;align-items:center;margin:-8px auto 22px;width:80%;">
+        <span style="flex:1;height:1px;background:rgba(255,255,255,.3);"></span>
+        <span style="padding:0 10px;font-size:16px;opacity:.7;">Contact Manager System</span>
+        <span style="flex:1;height:1px;background:rgba(255,255,255,.3);"></span>
+      </div>
+      <form id="registerForm">
+        <input type="text" id="regUsername" placeholder="Username" required>
+        <input type="password" id="regPassword" placeholder="Password" required>
+        <button type="submit">Register</button>
+      </form>
+      <div class="link">
+        Already have an account? <a href="#" onclick="showSection('loginSection')">Login</a>
+      </div>
+    </div>
+  </div>
+
+  <!-- 联系人管理 -->
+  <div id="contactsSection" class="section">
+    <div class="topbar">
+      <h2>Contact Manager</h2>
+      <button class="logout-btn" onclick="logout()">Logout</button>
+    </div>
+    <div class="content">
+      <div class="search-container">
+        <input type="text" id="searchInput" class="search-input" placeholder="Search contacts by name, phone or email...">
+        <button class="main-btn" onclick="searchContacts()">Search</button>
+        <button class="main-btn" style="background: #6c757d;" onclick="resetSearch()">Reset</button>
+      </div>
+
+      <div class="contact-form">
+        <input type="text" id="name" placeholder="Name">
+        <input type="text" id="phone" placeholder="Phone">
+        <input type="email" id="email" placeholder="Email">
+        <button class="main-btn" onclick="addContact()">Add Contact</button>
+      </div>
+
+      <div>Total contacts: <span id="totalCount">0</span></div>
+      <ul id="contactList"></ul>
+    </div>
+  </div>
+
+  <script>
+    const API = 'http://47.97.121.247';//'http://localhost:5500'; // 按需改端口
+    let allContacts = [];
+
+    function showSection(id) {
+      document.querySelectorAll('.section').forEach(s => {
+        s.classList.remove('active');
+        s.style.display = 'none';
+      });
+      const el = document.getElementById(id);
+      el.style.display = (id === 'contactsSection' ? 'flex' : 'block');
+      el.classList.add('active');
+    }
+    function logout() {
+      localStorage.removeItem('user_id');
+      showSection('loginSection');
+    }
+
+    /* ================= 登录 / 注册 ================= */
+    document.getElementById('loginForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      const res = await fetch(`${API}/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          username: document.getElementById('loginUsername').value,
+          password: document.getElementById('loginPassword').value
+        })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        localStorage.setItem('user_id', data.user_id);
+        showSection('contactsSection');
+        loadContacts();
+      } else alert(data.error);
+    });
+
+    document.getElementById('registerForm').addEventListener('submit', async e => {
+      e.preventDefault();
+      const res = await fetch(`${API}/register`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          username: document.getElementById('regUsername').value,
+          password: document.getElementById('regPassword').value
+        })
+      });
+      const data = await res.json();
+      alert(res.ok ? 'Registration successful' : data.error);
+      if (res.ok) showSection('loginSection');
+    });
+
+    /* ================= 联系人 ================= */
+    async function loadContacts() {
+      const uid = localStorage.getItem('user_id');
+      if (!uid) return;
+      const [cRes, nRes] = await Promise.all([
+        fetch(`${API}/contacts/${uid}`),
+        fetch(`${API}/contacts/count/${uid}`)
+      ]);
+      allContacts = await cRes.json();
+      document.getElementById('totalCount').textContent = (await nRes.json()).total;
+      renderContacts(allContacts);
+    }
+
+    function renderContacts(list) {
+      const ul = document.getElementById('contactList');
+      ul.innerHTML = '';
+      if (!list.length) {
+        const li = document.createElement('li');
+        li.innerHTML = '<span>No contacts found</span>';
+        ul.appendChild(li);
+        return;
+      }
+      list.forEach(c => {
+        const li = document.createElement('li');
+        li.id = `li-${c.id}`;
+        li.innerHTML = `
+          <div class="contact-info">
+            <div class="avatar">${c.name[0]}</div>
+            <div class="contact-details">
+              <b>${c.name}</b><br>
+              <span>Phone: ${c.phone}</span><br>
+              <span>Email: ${c.email || 'Not provided'}</span>
+            </div>
+          </div>
+          <div>
+            <button class="main-btn" style="margin-right:8px;padding:6px 12px;font-size:13px;"
+                    onclick="enterEdit(${c.id}, '${c.name}', '${c.phone}', '${c.email || ''}')">Edit</button>
+            <button class="delete-btn" onclick="deleteContact(${c.id})">Delete</button>
+          </div>`;
+        ul.appendChild(li);
+      });
+    }
+
+    async function addContact() {
+      const uid = localStorage.getItem('user_id');
+      const name = document.getElementById('name').value.trim();
+      const phone = document.getElementById('phone').value.trim();
+      const email = document.getElementById('email').value.trim();
+      if (!name || !phone) return alert('Name and phone required');
+      await fetch(`${API}/contacts`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ user_id: uid, name, phone, email })
+      });
+      ['name', 'phone', 'email'].forEach(id => document.getElementById(id).value = '');
+      loadContacts();
+    }
+
+    async function deleteContact(id) {
+      if (!confirm('Delete this contact?')) return;
+      await fetch(`${API}/contacts/${id}`, { method: 'DELETE' });
+      loadContacts();
+    }
+
+    /* ================= 编辑 ================= */
+    function enterEdit(id, name, phone, email) {
+      const li = document.getElementById(`li-${id}`);
+      li.innerHTML = `
+        <div class="edit-row">
+          <input id="edit-name-${id}" value="${name}">
+          <input id="edit-phone-${id}" value="${phone}">
+          <input id="edit-email-${id}" value="${email}">
+          <button class="save-btn" onclick="saveEdit(${id})">Save</button>
+          <button class="cancel-btn" onclick="loadContacts()">Cancel</button>
+        </div>`;
+    }
+    async function saveEdit(id) {
+      const name = document.getElementById(`edit-name-${id}`).value.trim();
+      const phone = document.getElementById(`edit-phone-${id}`).value.trim();
+      const email = document.getElementById(`edit-email-${id}`).value.trim();
+      if (!name || !phone) return alert('Name and phone required');
+      const res = await fetch(`${API}/contacts/${id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ name, phone, email })
+      });
+      if (res.ok) loadContacts();
+      else alert('Update failed');
+    }
+
+    /* ================= 搜索 ================= */
+    function searchContacts() {
+      const key = document.getElementById('searchInput').value.toLowerCase().trim();
+      if (!key) return renderContacts(allContacts);
+      const filtered = allContacts.filter(c =>
+        c.name.toLowerCase().includes(key) ||
+        c.phone.toLowerCase().includes(key) ||
+        (c.email && c.email.toLowerCase().includes(key))
+      );
+      renderContacts(filtered);
+    }
+    function resetSearch() {
+      document.getElementById('searchInput').value = '';
+      renderContacts(allContacts);
+    }
+    document.getElementById('searchInput').addEventListener('keyup', e => {
+      if (e.key === 'Enter') searchContacts();
+    });
+
+    /* ================= 入口 ================= */
+    window.onload = () => {
+      if (localStorage.getItem('user_id')) {
+        showSection('contactsSection');
+        loadContacts();
+      }
+    };
+  </script>
+</body>
+</html>
