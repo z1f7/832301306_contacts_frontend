@@ -1,252 +1,153 @@
-# 前端代码风格指南
+# 前端代码规范
 
-本文档概述了联系人管理器前端项目的编码风格和约定。
+## 规范来源
+本规范主要基于以下官方标准和行业最佳实践：
+- [Airbnb JavaScript 风格指南](https://github.com/airbnb/javascript)
+- [Google HTML/CSS 风格指南](https://google.github.io/styleguide/)
+- [W3C HTML 规范](https://html.spec.whatwg.org/)
+- [MDN Web 开发文档](https://developer.mozilla.org/zh-CN/docs/Web)
 
-## 一般原则
+## 1. HTML 规范
 
-- 编写干净、可读和可维护的代码
-- 遵循现代JavaScript (ES6+)标准
-- 使用有意义的变量和函数名称
-- 为复杂逻辑添加注释
-- 保持函数简短并专注于单一任务
+### 1.1 文档结构
+- 使用 HTML5 标准文档结构
+- 始终声明文档类型 `<!DOCTYPE html>`
+- 明确指定语言属性 `<html lang="zh-CN">`
+- 使用 UTF-8 编码 `<meta charset="UTF-8">`
+- 包含响应式视口设置 `<meta name="viewport" content="width=device-width, initial-scale=1.0">`
 
-## 格式规范
+### 1.2 标签使用
+- 使用语义化标签（`<header>`, `<nav>`, `<main>`, `<section>`, `<article>`, `<footer>` 等）
+- 标签名使用小写字母
+- 自闭合标签不使用斜杠（`<img>`, `<input>`, `<meta>` 等）
+- 避免不必要的标签嵌套
 
-### 缩进
-- 使用2个空格进行缩进
-- 永远不要使用制表符
+### 1.3 属性规范
+- 属性名使用小写字母
+- 使用双引号 `"` 而非单引号 `'` 包裹属性值
+- 布尔属性不添加值（`<input type="checkbox" checked>`）
+- 自定义数据属性使用 `data-` 前缀
+- 避免使用内联事件处理程序（`onclick`, `onload` 等）
 
-### 行长度
-- 最大行长度：100个字符
-- 适当换行以保持可读性
+### 1.4 可访问性
+- 添加适当的 `alt` 属性描述图像内容
+- 使用 `label` 标签关联表单控件
+- 确保页面具有合理的标题层级（h1-h6）
+- 为交互元素添加适当的 ARIA 属性
 
-### 空白
-- 使用空行分隔逻辑部分
-- 逗号后添加一个空格
-- 运算符周围添加空格
-- 函数之间使用一个空行
+## 2. CSS 规范
 
-### 命名约定
-- **变量/函数**：camelCase
-- **常量**：UPPER_SNAKE_CASE
-- **类**：PascalCase
-- **HTML元素**：kebab-case
-- **CSS类**：kebab-case
+### 2.1 格式
+- 使用 2 个空格缩进
+- 每个选择器独占一行
+- 声明块的大括号 `{` 与选择器在同一行
+- 每个声明独占一行
+- 声明结束使用分号 `;`
+- 右大括号 `}` 独占一行
+- 属性名和值之间使用一个空格分隔
+- 十六进制颜色使用小写字母
 
-## HTML指南
+### 2.2 选择器
+- 使用类选择器优先于 ID 选择器
+- 避免使用通用选择器 `*`
+- 避免使用标签名限定选择器（`.content div` 应改为 `.content-block`）
+- 选择器嵌套不超过 3 层
+- 使用有意义的类名，采用 BEM 命名约定（`block__element--modifier`）
 
-### 结构
-- 使用语义化HTML元素（header, nav, main, section, article, footer）
-- 保持清晰的层次结构
-- 使用适当的缩进
-- 包含doctype声明
-- 为html标签添加lang属性
+### 2.3 属性
+- 使用缩写属性（`margin`, `padding`, `border` 等）
+- 颜色值优先使用十六进制（`#fff`）或 RGB/RGBA
+- 长度值为 0 时省略单位（`margin: 0` 而非 `margin: 0px`）
+- 字体单位使用 `px` 或 `rem`
+- 避免使用 `!important`
 
-### 属性
-- 属性值使用双引号
-- 一致地排序属性：class, id, data-*, 然后是其他属性
-- 使用data-*属性存储自定义数据
+### 2.4 组织
+- 按功能或组件组织 CSS
+- 相关样式放在一起
+- 使用注释分隔不同部分
+- 避免重复样式，使用变量或混合（如使用预处理器）
 
-### HTML示例
+## 3. JavaScript 规范
 
-```html
-<!DOCTYPE html>
-<html lang="zh-CN">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>联系人管理器</title>
-  <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-  <header class="app-header">
-    <h1>联系人管理器</h1>
-    <nav class="main-nav">
-      <ul>
-        <li><a href="#" class="nav-link active">首页</a></li>
-        <li><a href="#" class="nav-link">联系人</a></li>
-      </ul>
-    </nav>
-  </header>
-  
-  <main class="content-area">
-    <section class="contact-list">
-      <!-- 联系人列表内容 -->
-    </section>
-  </main>
-  
-  <footer class="app-footer">
-    <p>&copy; 2023 联系人管理器</p>
-  </footer>
-  
-  <script src="app.js"></script>
-</body>
-</html>
-```
+### 3.1 变量声明
+- 使用 `const` 或 `let` 声明变量，避免使用 `var`
+- 优先使用 `const`，仅在需要重新赋值时使用 `let`
+- 变量名使用驼峰式命名（`camelCase`）
+- 常量使用全大写和下划线分隔（`MAX_COUNT`）
+- 每个变量声明独占一行
 
-## CSS指南
+### 3.2 函数
+- 函数名使用驼峰式命名
+- 构造函数使用帕斯卡式命名（`PascalCase`）
+- 使用箭头函数（`=>`）替代匿名函数表达式
+- 函数参数使用默认值而非条件检查
+- 函数体保持简洁，单一职责
+- 避免使用 `arguments` 对象，使用剩余参数（`...`）
 
-### 组织
-- 使用一致的CSS属性顺序：
-  1. 定位（position, top, right等）
-  2. 显示和盒模型（display, margin, padding等）
-  3. 排版（font, color, line-height等）
-  4. 视觉效果（background, border, box-shadow等）
-  5. 动画和过渡
-- 将相关样式分组
-- 使用注释分隔主要部分
+### 3.3 对象和数组
+- 对象字面量使用简洁语法（`{ x, y }` 而非 `{ x: x, y: y }`）
+- 使用对象解构获取属性值
+- 使用数组解构获取数组元素
+- 使用扩展运算符（`...`）复制数组和对象
+- 使用 `Array.from()` 或扩展运算符将类数组对象转换为数组
+- 使用 `Array.prototype.map()`, `filter()`, `reduce()` 等方法处理数组
 
-### 命名
-- 对复杂组件使用类似BEM的命名：`.block__element--modifier`
-- 使用有意义、描述性的类名
-- 避免使用通用类名如"container"或"box"
+### 3.4 字符串
+- 使用单引号 `'` 定义字符串
+- 多行字符串使用模板字符串（`` `...` ``）
+- 字符串连接使用模板字符串而非 `+` 运算符
+- 避免不必要的字符串转换
 
-### 选择器
-- 优先使用类选择器而非元素或ID选择器
-- 保持选择器特异性低
-- 尽可能避免嵌套选择器
+### 3.5 控制流
+- 使用严格相等运算符（`===`）和不相等运算符（`!==`）
+- `if-else` 语句的块使用大括号包裹
+- 三元运算符仅用于简单条件
+- 避免使用 `switch` 语句，优先使用对象字面量或策略模式
+- 使用 `for...of` 循环遍历数组
+- 使用 `Object.keys()`, `Object.values()`, `Object.entries()` 遍历对象
 
-### 值
-- 使用rem或em作为字体大小单位
-- 使用十六进制颜色代码（可能时使用简写）
-- 使用flexbox或grid进行布局
+### 3.6 错误处理
+- 使用 `try-catch` 捕获和处理异常
+- 抛出具体的错误类型
+- 错误信息应清晰描述问题
+- 避免空的 `catch` 块
 
-### CSS示例
+### 3.7 异步编程
+- 使用 `async/await` 替代回调函数和 `Promise` 链
+- 正确处理异步操作中的错误
+- 使用 `Promise.all()` 并行执行多个异步操作
+- 避免回调地狱
 
-```css
-/* 头部样式 */
-.app-header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 1rem 2rem;
-  background-color: #f5f7fa;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
+### 3.8 最佳实践
+- 代码应具有可读性和可维护性
+- 避免全局变量
+- 减少 DOM 操作，使用事件委托
+- 使用事件监听器而非内联事件
+- 避免使用 `eval()` 和 `with`
+- 使用模块化组织代码
+- 为代码添加适当的注释
+- 避免重复代码，提取公共函数
 
-.app-header h1 {
-  margin: 0;
-  font-size: 1.5rem;
-  color: #333;
-}
+## 4. 文件和项目结构
+- 使用有意义的文件名
+- 按功能或组件组织文件
+- 使用一致的文件命名约定
+- 分离 HTML、CSS 和 JavaScript 代码
+- 使用相对路径引用资源
 
-/* 导航样式 */
-.main-nav ul {
-  display: flex;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-}
+## 5. 性能优化
+- 减少 HTTP 请求
+- 压缩和合并 CSS/JavaScript 文件
+- 使用延迟加载技术
+- 优化图像资源
+- 避免阻塞渲染的 JavaScript
+- 使用适当的缓存策略
 
-.main-nav li {
-  margin-left: 1.5rem;
-}
-
-.nav-link {
-  text-decoration: none;
-  color: #666;
-  transition: color 0.3s ease;
-}
-
-.nav-link:hover,
-.nav-link.active {
-  color: #667eea;
-}
-```
-
-## JavaScript指南
-
-### 变量和数据类型
-- 使用`const`声明不改变的变量
-- 使用`let`声明会改变的变量
-- 避免使用`var`
-- 使用描述性的变量名
-- 对回调函数优先使用箭头函数
-
-### 函数
-- 对简短、简单的函数使用箭头函数
-- 对较长的函数使用函数声明
-- 保持函数在50行以内
-- 尽早从函数返回
-- 对可选值使用默认参数
-
-### Promises和Async/Await
-- 优先使用async/await而非.then()/.catch()
-- 使用try/catch块处理错误
-- 使用Promise.all()进行并行操作
-
-### DOM操作
-- 缓存多次访问的DOM元素
-- 对动态内容使用事件委托
-- 最小化直接DOM操作
-- 使用data属性将数据传递给JavaScript
-
-### API调用
-- 在服务模块中集中API调用
-- 处理加载和错误状态
-- 使用async/await进行API调用
-- 包含适当的错误处理
-
-### JavaScript示例
-
-```javascript
-// 常量
-const API_URL = 'http://localhost:5500';
-const CONTACT_LIST_EL = document.getElementById('contact-list');
-
-// DOM元素
-const elements = {
-  contactForm: document.getElementById('contact-form'),
-  nameInput: document.getElementById('name'),
-  phoneInput: document.getElementById('phone'),
-  emailInput: document.getElementById('email'),
-  contactList: document.getElementById('contact-list')
-};
-
-// API服务
-const apiService = {
-  async getContacts(userId) {
-    try {
-      const response = await fetch(`${API_URL}/contacts/${userId}`);
-      if (!response.ok) throw new Error('获取联系人失败');
-      return await response.json();
-    } catch (error) {
-      console.error('获取联系人错误:', error);
-      throw error;
-    }
-  },
-  
-  async addContact(contactData) {
-    try {
-      const response = await fetch(`${API_URL}/contacts`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(contactData)
-      });
-      
-      if (!response.ok) throw new Error('添加联系人失败');
-      return await response.json();
-    } catch (error) {
-      console.error('添加联系人错误:', error);
-      throw error;
-    }
-  }
-};
-
-```
-
-## 代码检查和格式化工具
-
-- 使用ESLint进行代码分析
-- 使用Prettier进行代码格式化
-- 配置编辑器在保存时自动格式化
-
-## Git提交指南
-
-- 编写清晰、简洁的提交消息
-- 在提交消息中适当引用问题编号
-- 保持提交专注于单一变更
+## 6. 代码审查清单
+- 代码是否符合本规范
+- 代码是否具有可读性
+- 代码是否有适当的注释
+- 是否存在重复代码
+- 是否存在性能问题
+- 是否存在安全隐患
+- 是否考虑了可访问性
