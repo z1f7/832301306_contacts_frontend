@@ -1,12 +1,12 @@
 # 832301306_contacts_frontend
 # 联系人管理系统
 
-一个全栈联系人管理应用，使用Flask（后端）和HTML/CSS/JavaScript（前端）构建。该系统允许用户注册、登录并管理他们的联系人，具有添加、查看、编辑、删除和搜索联系人等功能。
+一个全栈联系人管理应用，使用Flask（后端）和HTML/CSS/JavaScript（前端）构建。该系统允许用户注册、登录并管理他们的联系人，具有添加、编辑、删除和搜索联系人等功能。
 
 ## 功能特点
 
 - 用户认证（注册、登录）
-- 联系人管理（添加、查看、编辑、删除）
+- 联系人管理（添加、搜索、编辑、删除）
 - 联系人搜索功能
 - 响应式设计与现代UI
 - 使用SQLite数据库进行数据持久化
@@ -15,14 +15,14 @@
 
 ```
 contact-manager/
-├── README.md          # 项目文档
 ├── frontend/          # 前端文件
 │   ├── README.md      # 前端文档
 │   ├── contacts.html  # 主应用页面
 │   └── xingkong.jpg   # 背景图片
 └── backend/           # 后端文件
-    ├── README.md      # 后端文档
-    └── app.py         # Flask应用
+|    ├── README.md      # 后端文档
+|    └── app.py         # Flask应用
+└──db.sqlite
 ```
 
 ## 开始使用
